@@ -1,0 +1,110 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Kernl.us plugin repository\n"
+"POT-Creation-Date: 2017-02-18 13:47+0100\n"
+"PO-Revision-Date: 2017-02-18 13:58+0100\n"
+"Last-Translator: Fredrik Rossland <fredrik.rossland@gmail.com>\n"
+"Language-Team: Fredrik Rossland <fredrik.rossland@gmail.com>\n"
+"Language: nb_NO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ../..\n"
+"X-Poedit-WPHeader: kernl-wp-plugin-repository.php\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: kernl-wp-plugin-repository.php:55
+msgid "Installing..."
+msgstr "Installerer…"
+
+#: kernl-wp-plugin-repository.php:56 kernl-wp-plugin-repository.php:276
+msgid "Installed!"
+msgstr "Installert!"
+
+#: kernl-wp-plugin-repository.php:57
+msgid "Activating"
+msgstr "Aktiverer"
+
+#: kernl-wp-plugin-repository.php:58
+msgid "Activate"
+msgstr "Aktiver"
+
+#: kernl-wp-plugin-repository.php:59
+msgid "Activated"
+msgstr "Aktivert"
+
+#: kernl-wp-plugin-repository.php:75 kernl-wp-plugin-repository.php:76
+#: kernl-wp-plugin-repository.php:193
+msgid "Kernl.us plugins"
+msgstr "Kernl.us utvidelser"
+
+#: kernl-wp-plugin-repository.php:103 kernl-wp-plugin-repository.php:108
+msgid "Kernl API Key"
+msgstr "Kernl API-nøkkel"
+
+#: kernl-wp-plugin-repository.php:109
+#, php-format
+msgid ""
+"To create a read-only API key, log in to %s and go to \"your profile"
+"\" (upper left under your name).<br>Scroll down the until you see the "
+"section for <strong>read-only API keys</strong>."
+msgstr ""
+"For å lage en read-only API-nøkkel, logg inn på %s og gå til \"min profil"
+"\" (øverst til venstre under navnet ditt).<br>Bla nedover til du ser "
+"seksjonen for <strong>Read-Only API nøkkel.</strong>"
+
+#: kernl-wp-plugin-repository.php:210
+msgid "Sign out"
+msgstr "Logg ut"
+
+#: kernl-wp-plugin-repository.php:212
+msgid "Search plugins..."
+msgstr "Søk etter utvidelser …"
+
+#: kernl-wp-plugin-repository.php:237
+msgid "API-key is not valid"
+msgstr "API-nøkkel er ikke gyldig"
+
+#: kernl-wp-plugin-repository.php:243
+msgid "Submit"
+msgstr "Send"
+
+#: kernl-wp-plugin-repository.php:279
+msgid "Install Now"
+msgstr "Installer nå"
+
+#: kernl-wp-plugin-repository.php:287
+#, php-format
+msgid "Version %s"
+msgstr "Versjon %s"
+
+#: kernl-wp-plugin-repository.php:290
+msgid "Last Updated:"
+msgstr "Sist oppdatert:"
+
+#. Plugin Name of the plugin/theme
+msgid "Kernl.us plugin repository"
+msgstr "Kernl.us plugin repository"
+
+#. Description of the plugin/theme
+msgid ""
+"Adds a plugin repository from plugins hosted on <a href=\"https://kernl.us\" "
+"target=\"_blank\">kernl.us</a> for a simple installation"
+msgstr ""
+"Legger til et plugin repository fra plugins du har på <a href=\"https://"
+"kernl.us\" target=\"_blank\">kernl.us</a> for en enkel installasjon"
+
+#. Author of the plugin/theme
+msgid "Maksimer AS"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.maksimer.no/"
+msgstr ""

@@ -4,7 +4,7 @@
  * Description: Adds a plugin repository from plugins hosted on <a href="https://kernl.us" target="_blank">kernl.us</a> for a simple installation
  * Author:      Maksimer AS
  * Author URI:  https://www.maksimer.no/
- * Version:     1.0.0
+ * Version:     1.1.0
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -21,6 +21,7 @@ if ( is_admin() ) {
 if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 	class Kernl_Plugin_Repository {
 		public function __construct() {
+			add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 			add_action( 'admin_menu', array( $this, 'register_menu' ) );
 			add_action( 'admin_init', array( $this, 'page_init' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -34,9 +35,17 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 
 
 
+		public function load_textdomain() {
+			load_plugin_textdomain( 'kernl-plugin-repository', false, basename( dirname( __FILE__ ) ) . '/assets/languages' );
+		}
+
+
+
+
+
 		public function enqueue_scripts( $hook ) {
 			// Exit if not on kernl plugins page
-			if ( 'plugins_page_kernl-plugins' != $hook ) {
+			if ( ( 'plugins_page_kernl-plugins' != $hook ) || ( empty( $this->kernl_token() ) ) ) {
 				return;
 			}
 
@@ -90,14 +99,15 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 			);
 
 			add_settings_field(
-				'login_details',
-				__( 'Login to your kernl.us account', 'kernl-plugin-repository' ),
-				array( $this, 'kernl_login_form' ),
+				'authentication',
+				__( 'Kernl API Key', 'kernl-plugin-repository' ),
+				array( $this, 'input_text' ),
 				'kernl_plugin_repo_sections',
 				'kernl_plugin_repo_id',
 				array(
-					'title' => __( 'Login to your kernl.us account', 'kernl-plugin-repository' ),
-					'key'   => 'login_details',
+					'title'       => __( 'Kernl API Key', 'kernl-plugin-repository' ),
+					'description' => sprintf( __( 'To create a read-only API key, log in to %s and go to "your profile" (upper left under your name).<br>Scroll down the until you see the section for <strong>read-only API keys</strong>.', 'kernl-plugin-repository' ), '<a href="https://kernl.us" target="_blank">Kernl</a>' ),
+					'key'         => 'api_key',
 				)
 			);
 
@@ -112,16 +122,15 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 
 
 
-		public function kernl_login_form( $params ) {
+		public function input_text( $params ) {
 			$value = get_option( 'kernl_plugin_repo' );
 			$value = isset( $value[ $params['key'] ] ) ? $value[ $params['key'] ] : false;
-			$name  = 'kernl_plugin_repo[login_details]';
+			$name  = 'kernl_plugin_repo[authentication]';
 			echo '<fieldset>';
 				echo '<legend class="screen-reader-text"><span>' . $params['title'] . '</span></legend>';
-				echo '<input type="text" class="regular-text" name="' . $name . '[username]" value="' . esc_attr( $value['username'] ) . '" placeholder="' . __( 'Username', 'kernl-plugin-repository' ) . '"><br>';
-				echo '<input type="password" class="regular-text" name="' . $name . '[password]" value="' . esc_attr( $value['password'] ) . '" placeholder="' . __( 'Password', 'kernl-plugin-repository' ) . '">';
+				echo '<input type="password" class="regular-text" name="' . $name . '[' . $params['key'] . ']" value="' . esc_attr( $value[$params['key']] ) . '">';
 				if ( isset( $params['description'] ) ) {
-					echo '<span class="description">' . $params['description'] . '</span>';
+					echo '<br><span class="description">' . $params['description'] . '</span>';
 				}
 			echo '</fieldset>';
 		}
@@ -132,18 +141,18 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 
 		public function kernl_token() {
 			$kernl_settings = get_option( 'kernl_plugin_repo' );
-			$username = isset( $kernl_settings['login_details']['username'] ) ? $kernl_settings['login_details']['username'] : false;
-			$password = isset( $kernl_settings['login_details']['password'] ) ? $kernl_settings['login_details']['password'] : false;
+			$api_key = isset( $kernl_settings['authentication']['api_key'] ) ? $kernl_settings['authentication']['api_key'] : false;
 
-			if ( ( !empty( $username ) ) && ( !empty( $password ) ) ) {
+			if ( !empty( $api_key ) ) {
+				$key  = json_encode( array( 'key' => $api_key ) );
 				$args = array(
-					'body' => array(
-						'email'    => $username,
-						'password' => $password,
+					'headers' => array(
+						'content-type' => 'application/json',
 					),
+					'body' => $key,
 				);
 
-				$auth = wp_remote_post( 'https://kernl.us/api/v1/auth', $args );
+				$auth = wp_remote_post( 'https://kernl.us/api/v1/auth/api-key', $args );
 
 				if ( 200 == $auth['response']['code'] ) {
 					return $auth['body'];
@@ -166,6 +175,7 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 						'Authorization' => 'Bearer ' . $this->kernl_token(),
 					),
 				);
+
 				$get_plugins  = wp_remote_get( 'https://kernl.us/api/v1/plugins/', $plugins_args );
 				$plugins      = $get_plugins['body'];
 				$plugins      = json_decode( $plugins );
@@ -195,13 +205,12 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 
 		public function logged_in_view() {
 			if ( $this->all_plugins() ) {
-				$kernl_settings = get_option( 'kernl_plugin_repo' );
-				$logout_url     = add_query_arg( 'action', 'logout', $_SERVER['REQUEST_URI'] );
+				$log_out = add_query_arg( 'action', 'logout', $_SERVER['REQUEST_URI'] );
 				echo '<div class="wp-filter">';
-					echo '<span class="filter-items" style="margin-top: 9px;">' . __( 'Logged in as', 'kernl-plugin-repository' ) . ' ' . $kernl_settings['login_details']['username'] . '<br><a href="' . $logout_url . '">' . __( 'Sign out' ) . '</a></span>';
-					echo '<form class="search-form search-plugins">';
+					echo '<span class="filter-items" style="margin-top: 17px;"><a href="' . $log_out . '">' . __( 'Log out' ) . '</a></span>';
+					echo '<div class="search-form search-plugins">';
 						echo '<input type="search" name="s" value="" class="wp-filter-search fuzzy-search" placeholder="' . __( 'Search plugins...' ) . '">';
-					echo '</form>';
+					echo '</div>';
 				echo '</div>';
 
 				echo '<div class="wp-list-table widefat plugin-install">';
@@ -221,11 +230,19 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 		public function not_logged_in_view() {
 			echo '<form method="post" action="options.php">';
 				settings_fields( 'kernl_plugin_repo' );
+				if ( isset( $_GET['settings-updated'] ) && ! $this->kernl_token() ) {
+						add_settings_error(
+							'kernl_plugin_error',
+							esc_attr( 'kernl-plugin-repi' ),
+							__( 'API-key is not valid', 'kernl-plugin-repository' ),
+							'error'
+						);
+						settings_errors( 'kernl_plugin_error' );
+				}
 				do_settings_sections( 'kernl_plugin_repo_sections' );
-				submit_button( __( 'Login' ) );
+				submit_button( __( 'Submit' ) );
 			echo '</form>';
 		}
-
 
 
 

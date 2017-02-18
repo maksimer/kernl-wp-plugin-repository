@@ -1,3 +1,4 @@
 {
-	"1.0.0" : "<ul><li>Init release</li></ul>"
+	"1.0.0" : "<ul><li>Init release</li></ul>",
+	"1.1.0" : "<ul><li>Changed the authentication to use the new Read-Only API-Key</li><li>Norwegian translation</li></ul>"
 }
