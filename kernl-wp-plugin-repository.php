@@ -4,7 +4,7 @@
  * Description: Adds a plugin repository from plugins hosted on <a href="https://kernl.us" target="_blank">kernl.us</a> for a simple installation
  * Author:      Maksimer AS
  * Author URI:  https://www.maksimer.no/
- * Version:     1.1.0
+ * Version:     1.1.1
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -325,12 +325,7 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 				$new_plugin = plugin_basename( trim( $_POST['plugin_folder'] . '/' . $_POST['main_file'] ) );
 
 				if ( ! in_array( $new_plugin, $active ) ) {
-					$active[] = $new_plugin;
-					sort( $active );
-					do_action( 'activate_plugin', trim( $new_plugin ) );
-					update_option( 'active_plugins', $active );
-					do_action( 'activate_' . trim( $new_plugin ) );
-					do_action( 'activated_plugin', trim( $new_plugin ) );
+					activate_plugin( trim( $new_plugin ), false );
 				}
 			}
 
