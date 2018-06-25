@@ -6,7 +6,7 @@ jQuery(document).on('click', '.install-now ', function(e) {
 	console.log(file_url);
 
 	jQuery.ajax({
-		url: '/wp-admin/admin-ajax.php',
+		url: kernl.ajax_url,
 		method: 'POST',
 		data: {
 			'action': 'kernl_install_plugin',
@@ -37,7 +37,7 @@ jQuery(document).on('click', '.activate-now', function(e) {
 	var main_file = jQuery(this).data('file');
 
 	jQuery.ajax({
-		url: '/wp-admin/admin-ajax.php',
+		url: kernl.ajax_url,
 		method: 'POST',
 		data: {
 			'action': 'kernl_activate_plugin',

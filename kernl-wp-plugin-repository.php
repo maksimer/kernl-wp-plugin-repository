@@ -54,6 +54,12 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 			);
 			wp_localize_script( 'kernl_plugin_installer', 'php', $translation );
 
+			// Set of parameters to be passed to the ajax
+			$kernl_options = array(
+				'ajax_url' => admin_url('admin-ajax.php')
+			);
+			wp_localize_script( 'kernl_plugin_installer', 'kernl', $kernl_options );
+
 			wp_enqueue_script( 'listjs', KERNL_PLUGIN_REPOSITORY_URL . '/assets/js/list.js', array( 'jquery' ) );
 			wp_enqueue_script( 'kernl_plugin_installer' );
 		}
