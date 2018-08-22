@@ -56,7 +56,7 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 
 			// Set of parameters to be passed to the ajax
 			$kernl_options = array(
-				'ajax_url' => admin_url('admin-ajax.php')
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
 			);
 			wp_localize_script( 'kernl_plugin_installer', 'kernl', $kernl_options );
 
