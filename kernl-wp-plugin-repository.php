@@ -127,7 +127,7 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 		}
 
 
-		public function kernl_token() {
+		public static function kernl_token() {
 			$kernl_settings = get_option( 'kernl_plugin_repo' );
 			$api_key        = isset( $kernl_settings['authentication']['api_key'] ) ? $kernl_settings['authentication']['api_key'] : false;
 
@@ -308,3 +308,7 @@ if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 
 	$kernl_plugin_repository = new Kernl_Plugin_Repository();
 endif;
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require KERNL_PLUGIN_REPOSITORY_DIR . 'classes/class-kernl-wp-cli.php';
+}
