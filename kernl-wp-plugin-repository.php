@@ -4,7 +4,7 @@
  * Description: Adds a plugin repository from plugins hosted on <a href="https://kernl.us" target="_blank">kernl.us</a> for a simple installation
  * Author:      Maksimer AS
  * Author URI:  https://www.maksimer.no/
- * Version:     1.1.2
+ * Version:     1.1.3
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -13,10 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'KERNL_PLUGIN_REPOSITORY_DIR', plugin_dir_path( __FILE__ ) );
 define( 'KERNL_PLUGIN_REPOSITORY_URL', plugin_dir_url( __FILE__ ) );
 
-if ( is_admin() ) {
-	require KERNL_PLUGIN_REPOSITORY_DIR . 'assets/updates/plugin_update_check.php';
-	$MyUpdateChecker = new PluginUpdateChecker_2_0 ( 'https://kernl.us/api/v1/updates/58a4b555cae8bf04c6c617e0/', __FILE__, 'kernl-wp-plugin-repository', 1 );
-}
+require KERNL_PLUGIN_REPOSITORY_DIR . 'assets/kernl-update-checker/kernl-update-checker.php';
+$MyUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://kernl.us/api/v1/updates/58a4b555cae8bf04c6c617e0/',
+	__FILE__,
+	'kernl-wp-plugin-repository'
+);
+
 
 if ( ! class_exists( 'Kernl_Plugin_Repository' ) ) :
 	class Kernl_Plugin_Repository {
